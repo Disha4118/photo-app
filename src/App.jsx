@@ -11,8 +11,6 @@ import NotFound from './pages/NotFound';
 import SearchResults from './pages/SearchResults';
 import PhotoDetails from './pages/PhotoDetails';
 
-import './App.css';
-
 function App() {
   return (
     <Provider store={store}>
