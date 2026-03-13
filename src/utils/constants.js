@@ -1,5 +1,4 @@
-export const API_BASE_URL = "http://www.omdbapi.com/";
-export const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
+export const API_BASE_URL = "https://picsum.photos/v2";
 
 export const MOVIE_TYPES = {
   ALL: "all",
@@ -14,4 +13,4 @@ export const YEARS = [
 ];
 
 export const PLACEHOLDER_IMAGE =
-  "https://via.placeholder.com/300x450?text=No+Poster";
+  "https://via.placeholder.com/600x400?text=No+Image";

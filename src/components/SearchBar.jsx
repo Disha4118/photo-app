@@ -16,7 +16,7 @@ export default function SearchBar() {
     <form onSubmit={handleSearch} className="flex gap-2">
       <input
         type="text"
-        placeholder="Search Movie"
+        placeholder="Search photo"
         className="border px-3 py-2 rounded w-64"
         value={val}
         onChange={(e) => setVal(e.target.value)}

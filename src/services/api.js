@@ -1,51 +1,45 @@
 // src/services/api.js
-const API_KEY = import.meta.env.VITE_OMDB_API_KEY;
-const BASE_URL = "https://www.omdbapi.com/";
+const BASE_URL = "https://picsum.photos/v2";
+const DEFAULT_LIMIT = 30;
 
-export const searchMovies = async (
-  searchTerm,
-  page = 1,
-  type = "",
-  year = "",
-) => {
-  if (!API_KEY) {
-    throw new Error("Missing OMDB API key. Set VITE_OMDB_API_KEY.");
-  }
+const normalizeTerm = (term) => (term || "").trim().toLowerCase();
 
+export const searchMovies = async (searchTerm, page = 1) => {
   const params = new URLSearchParams({
-    apikey: API_KEY,
-    s: searchTerm || "avengers",
     page: page.toString(),
-    ...(type && type !== "all" && { type }),
-    ...(year && year !== "all" && { y: year }),
+    limit: DEFAULT_LIMIT.toString(),
   });
 
-  const response = await fetch(`${BASE_URL}?${params.toString()}`);
-  const data = await response.json();
-
-  if (data.Response === "False") {
-    throw new Error(data.Error);
+  const response = await fetch(`${BASE_URL}/list?${params.toString()}`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch photos.");
   }
 
-  return data;
+  const data = await response.json();
+  const term = normalizeTerm(searchTerm);
+  const filtered = term
+    ? data.filter((photo) => {
+        const idMatch = String(photo.id).includes(term);
+        const authorMatch = (photo.author || "").toLowerCase().includes(term);
+        return idMatch || authorMatch;
+      })
+    : data;
+
+  return {
+    Search: filtered,
+    totalResults: filtered.length.toString(),
+  };
 };
 
-export const getMovieDetails = async (imdbID) => {
-  if (!API_KEY) {
-    throw new Error("Missing OMDB API key. Set VITE_OMDB_API_KEY.");
+export const getMovieDetails = async (photoId) => {
+  if (!photoId) {
+    throw new Error("Missing photo id.");
   }
 
-  const params = new URLSearchParams({
-    apikey: API_KEY,
-    i: imdbID,
-    plot: "full",
-  });
-  const response = await fetch(`${BASE_URL}?${params.toString()}`);
-  const data = await response.json();
-
-  if (data.Response === "False") {
-    throw new Error(data.Error);
+  const response = await fetch(`${BASE_URL}/id/${photoId}/info`);
+  if (!response.ok) {
+    throw new Error("Failed to fetch photo details.");
   }
 
-  return data;
+  return response.json();
 };

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { searchMovies } from "../services/api";
-import MovieCard from "../components/MovieCard";
+import PhotoCard from "../components/PhotoCard";
 import Pagination from "../components/Pagination";
 import LoadingSkeleton from "../components/LoadingSkeleton";
 
@@ -13,8 +13,12 @@ export default function SearchResults() {
   const [totalResults, setTotalResults] = useState(0);
   const searchTerm = searchParams.get("q");
   const currentPage = parseInt(searchParams.get("page") || "1");
-  const itemsPerPage = 10;
+  const itemsPerPage = 30;
   const totalPages = Math.ceil(totalResults / itemsPerPage);
+  const pagedMovies = movies.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   useEffect(() => {
     if (!searchTerm) {
@@ -26,7 +30,7 @@ export default function SearchResults() {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const data = await searchMovies(searchTerm, currentPage);
+        const data = await searchMovies(searchTerm, 1);
         setMovies(data.Search || []);
         setTotalResults(parseInt(data.totalResults) || 0);
         setError(null);
@@ -40,7 +44,7 @@ export default function SearchResults() {
     };
 
     fetchMovies();
-  }, [searchTerm, currentPage]);
+  }, [searchTerm]);
 
   const handlePageChange = (page) => {
     setSearchParams({ q: searchTerm, page: page.toString() });
@@ -50,7 +54,7 @@ export default function SearchResults() {
   if (!searchTerm) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500 text-xl">Enter a search term to find movies</p>
+        <p className="text-gray-500 text-xl">Enter a search term to find photos</p>
       </div>
     );
   }
@@ -68,7 +72,7 @@ export default function SearchResults() {
   if (movies.length === 0) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <p className="text-gray-500 text-xl">No movies found for "{searchTerm}"</p>
+        <p className="text-gray-500 text-xl">No photos found for "{searchTerm}"</p>
       </div>
     );
   }
@@ -79,12 +83,12 @@ export default function SearchResults() {
         Search Results for "{searchTerm}"
       </h1>
       <p className="text-gray-600 mb-6">
-        Found {totalResults} movies • Page {currentPage} of {totalPages}
+        Found {totalResults} photos • Page {currentPage} of {totalPages || 1}
       </p>
       <div className="grid grid-cols-3 gap-4">
-        {movies.map((movie) => (
-          <div key={movie.imdbID}>
-            <MovieCard movie={movie} />
+        {pagedMovies.map((movie) => (
+          <div key={movie.id}>
+            <PhotoCard movie={movie} />
           </div>
         ))}
       </div>

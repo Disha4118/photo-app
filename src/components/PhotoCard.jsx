@@ -8,11 +8,11 @@ import { getPosterUrl } from "../utils/helpers";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleFavorite, addToWatchlist, removeFromWatchlist } from "../store/slices/userSlice";
 // import { useState } from "react";
-function MovieCard({ movie }) {
+function PhotoCard({ movie }) {
     const navigate = useNavigate();
     const { favorites, watchlist } = useSelector((state) => state.user);
-    const [favourite,setFavourite]=useState(favorites.includes(movie.imdbID)?liked:fav);
-    const [watchlistIcon,setWatchlistIcon]=useState(watchlist.includes(movie.imdbID)?saved:bookmark);
+    const [favourite,setFavourite]=useState(favorites.includes(movie.id)?liked:fav);
+    const [watchlistIcon,setWatchlistIcon]=useState(watchlist.includes(movie.id)?saved:bookmark);
     const dispatch = useDispatch();
     const handlefav=(id)=>{
         dispatch(toggleFavorite(id));
@@ -31,21 +31,22 @@ function MovieCard({ movie }) {
     <div className="max-w-sm rounded overflow-hidden shadow-lg m-4 cursor-pointer transition hover:shadow-xl">
         <img
           className="w-full h-64 object-cover cursor-pointer"
-          src={getPosterUrl(movie?.Poster)}
-          alt={movie?.Title || "Movie Poster"}
-          onClick={() => navigate(`/movie/${movie.imdbID}`)}
+          src={getPosterUrl(movie?.download_url)}
+          alt={movie?.author || "Photo"}
+          onClick={() => navigate(`/photo/${movie.id}`)}
         />
         <div className="px-6 py-4">
-            <div className="font-bold text-xl mb-2 cursor-pointer hover:text-blue-600" onClick={() => navigate(`/movie/${movie.imdbID}`)}>{movie.Title}</div> 
-            <p className="text-gray-700 text-base">Year: {movie.Year}</p>
+            <div className="font-bold text-xl mb-2 cursor-pointer hover:text-blue-600" onClick={() => navigate(`/photo/${movie.id}`)}>{movie.author}</div> 
+            <p className="text-gray-700 text-base">Photo ID: {movie.id}</p>
+            <p className="text-gray-700 text-base">Size: {movie.width} x {movie.height}</p>
             <div className="mt-3 flex items-center gap-3">
-              <button onClick={() => handlefav(movie.imdbID)}><img
+              <button onClick={() => handlefav(movie.id)}><img
                 src={favourite}
                 alt="Favorite"
                 className="h-8 w-8 rounded-full bg-pink-50 p-1 shadow-sm transition hover:scale-105"
               />
               </button>
-              <button onClick={()=>handlewatch(movie.imdbID)}>
+              <button onClick={()=>handlewatch(movie.id)}>
               <img
                 src={watchlistIcon}
                 alt="Bookmark"
@@ -56,4 +57,4 @@ function MovieCard({ movie }) {
     </div>
   );
 }
-export default MovieCard;
+export default PhotoCard;

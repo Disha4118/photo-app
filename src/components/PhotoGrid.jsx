@@ -1,34 +1,35 @@
 import React, { useEffect, useState } from "react";
-import MovieCard from "./MovieCard";
+import PhotoCard from "./PhotoCard";
 import Pagination from "./Pagination";
 import { searchMovies } from "../services/api";
 
-function MovieGrid() {
+function PhotoGrid() {
   const [movies, setMovies] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalResults, setTotalResults] = useState(0);
   const [loading, setLoading] = useState(false);
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(totalResults / itemsPerPage);
+  const itemsPerPage = 30;
+  const totalPages = Math.ceil(movies.length / itemsPerPage) || 1;
+  const pagedMovies = movies.slice(
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage,
+  );
 
   useEffect(() => {
     const fetchMovies = async () => {
       try {
         setLoading(true);
-        const data = await searchMovies("avengers", currentPage);
+        const data = await searchMovies("", 1);
         setMovies(data.Search || []);
-        setTotalResults(parseInt(data.totalResults) || 0);
       } catch (error) {
         console.error("Error fetching movies:", error);
         setMovies([]);
-        setTotalResults(0);
       } finally {
         setLoading(false);
       }
     };
 
     fetchMovies();
-  }, [currentPage]);
+  }, []);
 
   const handlePageChange = (page) => {
     setCurrentPage(page);
@@ -38,9 +39,9 @@ function MovieGrid() {
   return (
     <div>
       <div className="grid grid-cols-3 gap-4 ml-3">
-        {movies.map((movie) => (
-          <div key={movie.imdbID}>
-            <MovieCard movie={movie} />
+        {pagedMovies.map((movie) => (
+          <div key={movie.id}>
+            <PhotoCard movie={movie} />
           </div>
         ))}
       </div>
@@ -55,4 +56,4 @@ function MovieGrid() {
   );
 }
 
-export default MovieGrid;
+export default PhotoGrid;

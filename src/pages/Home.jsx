@@ -1,10 +1,10 @@
 import React,{useState} from "react";
 import { useDebounce } from "../hooks/useDebounce";
 import { searchMovies } from "../services/api";
-import MovieGrid from "../components/MovieGrid";
+import PhotoGrid from "../components/PhotoGrid";
 export default function Home() {
   return <>
-    <MovieGrid className="m-4"/>
+    <PhotoGrid className="m-4"/>
     <h1>hi</h1>
   </>
 }

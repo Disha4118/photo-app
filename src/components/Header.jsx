@@ -6,7 +6,7 @@ export default function Header() {
   return (
     <header className="bg-blue-600 text-white p-4 flex justify-between items-center pl-6 pr-6">
       <Link to="/" className="text-2xl font-bold mr-4">
-        MovieApp
+        photoApp
       </Link>
       <SearchBar />
       <Link to="/favourites" className="mt-2">

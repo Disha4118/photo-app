@@ -9,7 +9,7 @@ import Home from './pages/Home';
 import Favourites from './pages/Favourites'
 import NotFound from './pages/NotFound';
 import SearchResults from './pages/SearchResults';
-import MovieDetails from './pages/MovieDetails';
+import PhotoDetails from './pages/PhotoDetails';
 
 import './App.css';
 
@@ -22,7 +22,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/search" element={<SearchResults />} />
-            <Route path="/movie/:imdbID" element={<MovieDetails />} />
+            <Route path="/photo/:photoId" element={<PhotoDetails />} />
             <Route path="/watchlist" element={<WatchList />} />
             <Route path="/favourites" element={<Favourites />} />
             <Route path="*" element={<NotFound />} />
